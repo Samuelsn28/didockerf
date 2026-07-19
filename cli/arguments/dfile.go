@@ -19,10 +19,18 @@ func changeCategory(args []string) bool {
 
 func getValidArgs() map[ArgumentId]Argument {
 	ls := GetArgLs()
+	save := GetArgSaveDockerfile()
+	rm := GetArgRmDockerfile()
+	ch := GetArgChangeDockerfile()
 
 	return map[ArgumentId]Argument {
 		ls.Id: ls,
+		save.Id: save,
+		rm.Id: rm,
+		ch.Id: ch,
 	}
 
 }
+
+
 

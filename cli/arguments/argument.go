@@ -4,7 +4,7 @@ type ArgumentId string
 
 type Argument struct {
 	Id ArgumentId
-	Action func([]string) bool
+	Action func(remainingCliArgs []string) (stopReadingNextArgs bool)
 	ValidArgs map[ArgumentId]Argument
 }
 
