@@ -7,7 +7,7 @@ import (
 	argPkg "didockerf/cli/arguments"
 )
 
-var remainingArgs []string = os.Args[2:]
+var remainingArgs []string = os.Args[1:]
 
 func Operate(validArgs map[argPkg.ArgumentId]argPkg.Argument) {
 	if (len(remainingArgs) == 0) {
