@@ -10,6 +10,10 @@ func GetArgRmDockerfile() Argument {
 	return makeArgRm(removeDockerfile)
 }
 
+func GetArgRmComposeFile() Argument {
+	return makeArgRm(removeComposeFile)
+}
+
 func makeArgRm(action func([]string)bool) Argument {
 	return Argument{
 		Id: rmId,

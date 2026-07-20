@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-const saveId string = "save"
+const saveId ArgumentId = "save"
 
 func GetArgSaveDockerfile() Argument {
 	return makeArgSave(saveDockerfile)
@@ -16,7 +16,7 @@ func GetArgSaveComposeFile() Argument {
 
 func makeArgSave(action func([]string)bool) Argument {
 	return Argument{
-		Id: ArgumentId(saveId),
+		Id: saveId,
 		Action: action,
 		ValidArgs: nil,
 	}

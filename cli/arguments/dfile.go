@@ -4,31 +4,35 @@ import (
 	"fmt"
 )
 
+const dockerfileCategoryId ArgumentId = "dfile"
+
 func GetSubCommandDfile() Argument {
 	return Argument{
-		Id: "dfile",
-		Action: changeCategory,
-		ValidArgs: getValidArgs(),
+		Id: dockerfileCategoryId,
+		Action: changeCategoryToDockerfile,
+		ValidArgs: getValidArgsForDockerfileCategory(),
 	}
 }
 
-func changeCategory(args []string) bool {
+func changeCategoryToDockerfile(args []string) bool {
 	fmt.Println("DFile is here")
 	return false
 }
 
-func getValidArgs() map[ArgumentId]Argument {
-	ls := GetArgLs()
+func getValidArgsForDockerfileCategory() map[ArgumentId]Argument {
+	ls := GetArgLsDockerfile()
 	save := GetArgSaveDockerfile()
 	rm := GetArgRmDockerfile()
 	ch := GetArgChangeDockerfile()
+	prune := GetArgPruneDockerfile()
 
 	return map[ArgumentId]Argument {
 		ls.Id: ls,
 		save.Id: save,
 		rm.Id: rm,
 		ch.Id: ch,
-	}
+		prune.Id: prune,
+	}	
 
 }
 

@@ -4,9 +4,11 @@ import (
 	"fmt"
 )
 
+const exportId ArgumentId = "export"
+
 func GetSubCommandExport() Argument {
 	return Argument{
-		Id: "export",
+		Id: exportId,
 		Action: exportAllFiles,
 		ValidArgs: make(map[ArgumentId]Argument),
 	}
