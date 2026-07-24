@@ -1,6 +1,6 @@
 package model
 
-const savedDockerfileDefaultName = "dockerfile-"
+const savedDockerfileDefaultName = "dockerfile_"
 
 type Dockerfile struct {
 	Name string 
@@ -9,7 +9,7 @@ type Dockerfile struct {
 }
 
 func (d Dockerfile) GetFileName() string {
-	return savedDockerfileDefaultName + d.Name + "-" + d.Version
+	return savedDockerfileDefaultName + d.Name + "_" + d.Version
 }
 
 

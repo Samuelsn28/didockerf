@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 )
 
 func FileExist(filePath string) bool {
@@ -40,5 +41,26 @@ func copyFile(fileToCopyPath string, destinationPath string) error {
 		return err
 	}
 	return nil
+}
+
+func getAllFilesPathRecursively(dirPath string) ([]string, error) {
+	filesNames := []string{}
+
+	err := filepath.WalkDir(dirPath, func(path string, d os.DirEntry, err error) error {
+		if (err != nil) {
+			return err
+		}
+
+		if (!d.IsDir()) {
+			filesNames = append(filesNames, path)
+		}
+		return nil
+	})
+
+	if (err != nil) {
+		return []string{}, err
+	}
+
+	return filesNames, nil
 }
 
