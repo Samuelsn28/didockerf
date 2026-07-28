@@ -45,20 +45,35 @@ func getAllFilesPathRecursively(dirPath string) ([]string, error) {
 	filesNames := []string{}
 
 	err := filepath.WalkDir(dirPath, func(path string, d os.DirEntry, err error) error {
-		if (err != nil) {
+		if err != nil {
 			return err
 		}
 
-		if (!d.IsDir()) {
+		if !d.IsDir() {
 			filesNames = append(filesNames, path)
 		}
 		return nil
 	})
-
-	if (err != nil) {
+	if err != nil {
 		return []string{}, err
 	}
 
 	return filesNames, nil
 }
 
+func renameFile(filePath string, newName string) error {
+	err := os.Rename(filePath, newName)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func deleteFile(filePath string) error {
+	err := os.Remove(filePath)
+	if err != nil {
+		return err
+	}
+	return nil
+}

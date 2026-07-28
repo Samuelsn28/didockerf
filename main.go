@@ -13,9 +13,4 @@ func determineSubCommand() {
 	subCommands := pkgArgs.GetSubCommands()
 
 	cli.Operate(subCommands)
-
-
 }
-
-
-
