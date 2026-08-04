@@ -4,19 +4,18 @@ import (
 	"fmt"
 )
 
-const exportId ArgumentId = "export"
+const exportID ArgumentID = "export"
 
 func GetSubCommandExport() Argument {
 	return Argument{
-		Id: exportId,
-		Action: exportAllFiles,
-		ValidArgs: make(map[ArgumentId]Argument),
+		ID:        exportID,
+		Action:    exportAllFiles,
+		ValidArgs: make(map[ArgumentID]Argument),
 	}
 }
 
 func exportAllFiles([]string) bool {
 	fmt.Println("Exportando...")
-	
+
 	return true
 }
-

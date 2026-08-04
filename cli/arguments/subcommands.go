@@ -1,17 +1,15 @@
 package arguments
 
-func GetSubCommands() map[ArgumentId]Argument {
+func GetSubCommands() map[ArgumentID]Argument {
 	export := GetSubCommandExport()
-	importCmd  := GetSubCommandImport()
+	importCmd := GetSubCommandImport()
 	dfile := GetSubCommandDfile()
 	composeFile := GetSubCommandComposeFile()
 
-	return map[ArgumentId]Argument{
-		composeFile.Id: composeFile,
-		dfile.Id: dfile,
-		export.Id: export,
-		importCmd.Id: importCmd, 
+	return map[ArgumentID]Argument{
+		composeFile.ID: composeFile,
+		dfile.ID:       dfile,
+		export.ID:      export,
+		importCmd.ID:   importCmd,
 	}
 }
-
-

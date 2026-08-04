@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-const rmId ArgumentId = "rm"
+const rmID ArgumentID = "rm"
 
 func GetArgRmDockerfile() Argument {
 	return makeArgRm(removeDockerfile)
@@ -14,10 +14,10 @@ func GetArgRmComposeFile() Argument {
 	return makeArgRm(removeComposeFile)
 }
 
-func makeArgRm(action func([]string)bool) Argument {
+func makeArgRm(action func([]string) bool) Argument {
 	return Argument{
-		Id: rmId,
-		Action: action,
+		ID:        rmID,
+		Action:    action,
 		ValidArgs: nil,
 	}
 }
@@ -33,5 +33,3 @@ func removeComposeFile(args []string) bool {
 
 	return true
 }
-
-

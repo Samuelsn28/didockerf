@@ -1,11 +1,9 @@
 package arguments
 
-type ArgumentId string
+type ArgumentID string
 
 type Argument struct {
-	Id ArgumentId
-	Action func(remainingCliArgs []string) (stopReadingNextArgs bool)
-	ValidArgs map[ArgumentId]Argument
+	ID        ArgumentID
+	Action    func(remainingCliArgs []string) (stopReadingNextArgs bool)
+	ValidArgs map[ArgumentID]Argument
 }
-
-

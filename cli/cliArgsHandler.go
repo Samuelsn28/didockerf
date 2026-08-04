@@ -9,8 +9,8 @@ import (
 
 var remainingArgs []string = os.Args[1:]
 
-func Operate(validArgs map[argPkg.ArgumentId]argPkg.Argument) {
-	if (len(remainingArgs) == 0) {
+func Operate(validArgs map[argPkg.ArgumentID]argPkg.Argument) {
+	if len(remainingArgs) == 0 {
 		fmt.Println("Argumentos vazio. Encerrando...")
 		return
 	}
@@ -18,8 +18,8 @@ func Operate(validArgs map[argPkg.ArgumentId]argPkg.Argument) {
 	fmt.Println(remainingArgs)
 
 	currentPassedArg := remainingArgs[0]
-	arg, isArgValid := validArgs[argPkg.ArgumentId(currentPassedArg)]
-	if (!isArgValid) {
+	arg, isArgValid := validArgs[argPkg.ArgumentID(currentPassedArg)]
+	if !isArgValid {
 		// Error: comando inválido
 		fmt.Println("Erro: argumento inválido")
 		return
@@ -29,11 +29,10 @@ func Operate(validArgs map[argPkg.ArgumentId]argPkg.Argument) {
 
 	finishExecution := arg.Action(remainingArgs)
 
-	if (finishExecution) {
+	if finishExecution {
 		return
 	}
 
 	validArgs = arg.ValidArgs
 	Operate(validArgs)
 }
-

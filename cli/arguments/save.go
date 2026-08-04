@@ -1,8 +1,8 @@
 package arguments
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 	"strings"
 
 	filem "didockerf/file"
@@ -10,7 +10,7 @@ import (
 	"didockerf/out"
 )
 
-const saveId ArgumentId = "save"
+const saveID ArgumentID = "save"
 
 func GetArgSaveDockerfile() Argument {
 	return makeArgSave(saveDockerfile)
@@ -20,35 +20,33 @@ func GetArgSaveComposeFile() Argument {
 	return makeArgSave(saveComposeFile)
 }
 
-func makeArgSave(action func([]string)bool) Argument {
+func makeArgSave(action func([]string) bool) Argument {
 	return Argument{
-		Id: saveId,
-		Action: action,
+		ID:        saveID,
+		Action:    action,
 		ValidArgs: nil,
 	}
 }
 
 func saveDockerfile(args []string) bool {
 	errOnArgs := checkIfSaveDockerfileArgsAreCorrect(args)
-	if (errOnArgs != nil) {
-		out.PrintError(errOnArgs)
+	if errOnArgs != nil {
+		out.FatalError(errOnArgs)
 		return true
 	}
 
 	dockerfilePath := args[0]
-	saveIdentifierSplitted := splitSaveIdentifier(args[1])
-	saveName := saveIdentifierSplitted[0]
-	saveTag := "1.0"
+	saveIdentifier, errCreateIdentifier := model.CreateIdentifierFromStr(model.IdentifierStr(args[1]))
 
-	if (len(saveIdentifierSplitted) == 2) {
-		saveTag = saveIdentifierSplitted[1]
+	if errCreateIdentifier != nil {
+		out.PrintFatalError("The passed identifier is invalid.")
+		return true
 	}
 
-	dockerfile := model.Dockerfile{
-		Name: saveName,
-		Tag: saveTag,
-		OriginPath: dockerfilePath,
-	}
+	dockerfile := model.CreateDockerfile(
+		saveIdentifier,
+		dockerfilePath,
+	)
 
 	fmt.Println("Salvando dockerfile...")
 
@@ -58,19 +56,18 @@ func saveDockerfile(args []string) bool {
 }
 
 func checkIfSaveDockerfileArgsAreCorrect(args []string) error {
-	if (len(args) != 2) {
+	if len(args) != 2 {
 		return errors.New(fmt.Sprintf("Save requires 2 arguments, but received %d.", len(args)))
 	}
 
 	dockerfilePath := args[0]
-	if (!existDockerfileToSave(dockerfilePath)) { 
+	if !existDockerfileToSave(dockerfilePath) {
 		return errors.New("Passed dockerfile doesn't exist.")
 	}
 
-	saveIdentifier := args[1]
-	errInIdentifier := checkIfSaveIdentifierIsCorrectlyFormatted(saveIdentifier)
-	if (errInIdentifier != nil) {
-		return errInIdentifier
+	saveIdentifier := model.IdentifierStr(args[1])
+	if !model.IsIdentifierStrValid(saveIdentifier) {
+		return errors.New("Passed identifier is invalid.")
 	}
 
 	return nil
@@ -78,17 +75,6 @@ func checkIfSaveDockerfileArgsAreCorrect(args []string) error {
 
 func existDockerfileToSave(dockerfilePath string) bool {
 	return filem.FileExist(dockerfilePath)
-}
-
-func checkIfSaveIdentifierIsCorrectlyFormatted(saveIdentifier string) error {
-	saveIdentifierSplitted := splitSaveIdentifier(saveIdentifier)
-
-	// TODO: limitar caracteres que podem ser usados no nome (evitar problemas para indicar diretorio)
-	
-	if (len(saveIdentifierSplitted) <= 0 || len(saveIdentifierSplitted) > 2) {
-		return errors.New("Dockerfile identifier must be <name> or <name>:<tag>")
-	}
-	return nil
 }
 
 func saveComposeFile(args []string) bool {
@@ -100,4 +86,3 @@ func saveComposeFile(args []string) bool {
 func splitSaveIdentifier(saveIdentifier string) []string {
 	return strings.Split(saveIdentifier, ":")
 }
-

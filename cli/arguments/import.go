@@ -4,12 +4,12 @@ import (
 	"fmt"
 )
 
-const importId ArgumentId = "import"
+const importID ArgumentID = "import"
 
 func GetSubCommandImport() Argument {
 	return Argument{
-		Id: importId,
-		Action: importFiles,
+		ID:        importID,
+		Action:    importFiles,
 		ValidArgs: nil,
 	}
 }
@@ -19,4 +19,3 @@ func importFiles(args []string) bool {
 
 	return true
 }
-

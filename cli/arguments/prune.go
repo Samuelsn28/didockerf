@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-const pruneId ArgumentId = "prune"
+const pruneID ArgumentID = "prune"
 
 func GetArgPruneDockerfile() Argument {
 	return makeArgPrune(pruneDockerfile)
@@ -14,10 +14,10 @@ func GetArgPruneComposeFile() Argument {
 	return makeArgPrune(pruneComposeFile)
 }
 
-func makeArgPrune(action func([]string)bool) Argument {
+func makeArgPrune(action func([]string) bool) Argument {
 	return Argument{
-		Id: pruneId,
-		Action: action,
+		ID:        pruneID,
+		Action:    action,
 		ValidArgs: nil,
 	}
 }
@@ -33,4 +33,3 @@ func pruneComposeFile(args []string) bool {
 
 	return true
 }
-

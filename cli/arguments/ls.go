@@ -7,7 +7,7 @@ import (
 	"didockerf/out"
 )
 
-const listId ArgumentId = "ls"
+const listID ArgumentID = "ls"
 
 func GetArgLsDockerfile() Argument {
 	return makeArgLs(listDockerfiles)
@@ -17,10 +17,10 @@ func GetArgLsComposeFile() Argument {
 	return makeArgLs(listComposeFiles)
 }
 
-func makeArgLs(action func([]string)bool) Argument {
+func makeArgLs(action func([]string) bool) Argument {
 	return Argument{
-		Id: listId,
-		Action: action,
+		ID:        listID,
+		Action:    action,
 		ValidArgs: nil,
 	}
 }
@@ -37,4 +37,3 @@ func listComposeFiles(args []string) bool {
 
 	return true
 }
-
