@@ -98,14 +98,14 @@ func ChangeSavedDockerfileIdentifier(currentIdentifierStr model.IdentifierStr, n
 		return errors.New("Erro ao copiar o arquivo antigo")
 	}
 
-	errDeletingFile := deleteFile(newOriginPath)
+	errDeletingFile := deleteFile(currentOriginPath)
 	if errDeletingFile != nil {
 		return errors.New("Erro ao deletar o save antigo")
 	}
 
-	originWithOnlyPath := getPathWithoutName(newOriginPath)
-	if isDirEmpty(originWithOnlyPath) {
-		errDirIsntEmpty := deleteDir(originWithOnlyPath)
+	currentOriginWithOnlyPath := getPathWithoutName(currentOriginPath)
+	if isDirEmpty(currentOriginWithOnlyPath) {
+		errDirIsntEmpty := deleteDir(currentOriginWithOnlyPath)
 
 		if errDirIsntEmpty != nil {
 			return errors.New("Error: origin dir isn't empty.")

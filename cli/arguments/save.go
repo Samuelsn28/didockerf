@@ -48,8 +48,6 @@ func saveDockerfile(args []string) bool {
 		dockerfilePath,
 	)
 
-	fmt.Println("Salvando dockerfile...")
-
 	filem.SaveDockerfile(dockerfile)
 
 	return true

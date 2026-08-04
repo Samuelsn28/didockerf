@@ -1,27 +1,24 @@
 package cli
 
 import (
-	"fmt"
 	"os"
 
 	argPkg "didockerf/cli/arguments"
+	"didockerf/out"
 )
 
 var remainingArgs []string = os.Args[1:]
 
 func Operate(validArgs map[argPkg.ArgumentID]argPkg.Argument) {
 	if len(remainingArgs) == 0 {
-		fmt.Println("Argumentos vazio. Encerrando...")
+		out.PrintFatalError("Argumentos vazio. Encerrando...")
 		return
 	}
-
-	fmt.Println(remainingArgs)
 
 	currentPassedArg := remainingArgs[0]
 	arg, isArgValid := validArgs[argPkg.ArgumentID(currentPassedArg)]
 	if !isArgValid {
-		// Error: comando inválido
-		fmt.Println("Erro: argumento inválido")
+		out.PrintFatalError("Invalid argument")
 		return
 	}
 

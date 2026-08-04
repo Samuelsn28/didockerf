@@ -1,9 +1,5 @@
 package arguments
 
-import (
-	"fmt"
-)
-
 const dockerfileCategoryID ArgumentID = "dfile"
 
 func GetSubCommandDfile() Argument {
@@ -15,7 +11,6 @@ func GetSubCommandDfile() Argument {
 }
 
 func changeCategoryToDockerfile(args []string) bool {
-	fmt.Println("DFile is here")
 	return false
 }
 
