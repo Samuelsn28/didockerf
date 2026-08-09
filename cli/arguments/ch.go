@@ -4,9 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	filem "didockerf/file"
-	"didockerf/model"
 	"didockerf/out"
+	savem "didockerf/savesManagement"
 )
 
 const changeId ArgumentID = "ch"
@@ -34,10 +33,10 @@ func changeDockerfile(args []string) bool {
 		return true
 	}
 
-	dockerfilesIdentifier := model.IdentifierStr(args[0])
-	newIdentifier := model.IdentifierStr(args[1])
+	dockerfileIdentifierStr := args[0]
+	newIdentifierStr := args[1]
 
-	errOnChange := filem.ChangeSavedDockerfileIdentifier(dockerfilesIdentifier, newIdentifier)
+	errOnChange := savem.ChangeSavedDockerfileIdentifier(dockerfileIdentifierStr, newIdentifierStr)
 	if errOnChange != nil {
 		out.FatalError(errOnChange)
 		return true
@@ -49,17 +48,6 @@ func changeDockerfile(args []string) bool {
 func checkIfChangeDockerfileArgsAreCorrect(args []string) error {
 	if len(args) != 2 {
 		return errors.New(fmt.Sprintf("Change dockerfile requires 2 arguments, but received %d.", len(args)))
-	}
-
-	savedDockerfileIdentifierStr := model.IdentifierStr(args[0])
-	_, err := filem.TransformSavedDockerfileIdentifierStrIntoDockerfile(savedDockerfileIdentifierStr)
-	if err != nil {
-		return errors.New("The saved dockerfile with the passed identifer doesnt't exist")
-	}
-
-	newIdentifierStr := model.IdentifierStr(args[1])
-	if !model.IsIdentifierStrValid(newIdentifierStr) {
-		return errors.New("New dockerfile's identifier is incorrectly formatted. It must be <name>:<tag>.")
 	}
 	return nil
 }

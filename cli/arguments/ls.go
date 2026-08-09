@@ -3,8 +3,8 @@ package arguments
 import (
 	"fmt"
 
-	filem "didockerf/file"
-	"didockerf/out"
+	"didockerf/out/printers"
+	savem "didockerf/savesManagement"
 )
 
 const listID ArgumentID = "ls"
@@ -26,8 +26,8 @@ func makeArgLs(action func([]string) bool) Argument {
 }
 
 func listDockerfiles(args []string) bool {
-	savedDockerfiles := filem.GetAllSavedDockerfiles()
-	out.PrintDockerfilesInTable(savedDockerfiles)
+	savedDockerfilesInfos := savem.GetAllSavedDockerfilesInfos()
+	printers.PrintSavedDockerfilesInfos(savedDockerfilesInfos)
 
 	return true
 }

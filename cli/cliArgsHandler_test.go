@@ -20,6 +20,7 @@ func TestArguments(t *testing.T) {
 		{"Changing name and tag of dockerfile", []string{"dfile", "ch", "debian-plus:v1", "debian-pro:v2"}, func() {}, confirmChangeNameAndTagOfDockerfile},
 		{"Changing only tag of dockerfile", []string{"dfile", "ch", "debian-pro:v2", "debian-pro:v3-ultra"}, func() {}, confirmChangeOnlyTagOfDockerfile},
 		{"List all saved dockerfiles", []string{"dfile", "ls"}, func() {}, confirmTheListOfSavedDockerfiles},
+		{"Getting saved dockerfile", []string{"dfile", "get", "debian-pro:v3-ultra", "."}, func() {}, confirmThatSavedDockerfileWasRetrieved},
 	}
 
 	for _, tc := range tests {
@@ -117,6 +118,21 @@ func confirmTheListOfSavedDockerfiles() (bool, string) {
 	return true, ""
 }
 
+func confirmThatSavedDockerfileWasRetrieved() (bool, string) {
+	retrievedDockerfileInfo, errOnGetDockerfile := os.Stat("./dockerfile_debian-pro_v3-ultra")
+	if errOnGetDockerfile != nil {
+		return false, "The wished dockerfile was not copied to the directory or don't have the name dockerfile_debian-pro_v3-ultra"
+	}
+
+	testDockerfileInfo, _ := os.Stat("custom_dockerfiles/debian-plus")
+
+	if retrievedDockerfileInfo.Size() != testDockerfileInfo.Size() {
+		return false, fmt.Sprintf("Retrieved dockerfile is not equal to the original version. \nOriginal version: %d. \nRetrieved dockerfile: %d", testDockerfileInfo.Size(), retrievedDockerfileInfo.Size())
+	}
+
+	return true, ""
+}
+
 func cleanAll() {
 	errToRemoveDir := os.RemoveAll("custom_dockerfiles")
 	if errToRemoveDir != nil {
@@ -126,5 +142,10 @@ func cleanAll() {
 	errToRemoveDir = os.RemoveAll("saves")
 	if errToRemoveDir != nil {
 		out.Warn("It was not possible remove saves dir.")
+	}
+
+	errToRemoveRetrievedDockerfile := os.Remove("dockerfile_debian-pro_v3-ultra")
+	if errToRemoveRetrievedDockerfile != nil {
+		out.Warn("It was not possible remove retrieved dockerfile.")
 	}
 }

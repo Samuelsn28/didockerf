@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	filem "didockerf/file"
-	"didockerf/model"
 	"didockerf/out"
+	savem "didockerf/savesManagement"
 )
 
 const saveID ArgumentID = "save"
@@ -36,19 +35,9 @@ func saveDockerfile(args []string) bool {
 	}
 
 	dockerfilePath := args[0]
-	saveIdentifier, errCreateIdentifier := model.CreateIdentifierFromStr(model.IdentifierStr(args[1]))
+	saveIdentifierStr := args[1]
 
-	if errCreateIdentifier != nil {
-		out.PrintFatalError("The passed identifier is invalid.")
-		return true
-	}
-
-	dockerfile := model.CreateDockerfile(
-		saveIdentifier,
-		dockerfilePath,
-	)
-
-	filem.SaveDockerfile(dockerfile)
+	savem.SaveDockerfile(saveIdentifierStr, dockerfilePath)
 
 	return true
 }
@@ -63,16 +52,11 @@ func checkIfSaveDockerfileArgsAreCorrect(args []string) error {
 		return errors.New("Passed dockerfile doesn't exist.")
 	}
 
-	saveIdentifier := model.IdentifierStr(args[1])
-	if !model.IsIdentifierStrValid(saveIdentifier) {
-		return errors.New("Passed identifier is invalid.")
-	}
-
 	return nil
 }
 
 func existDockerfileToSave(dockerfilePath string) bool {
-	return filem.FileExist(dockerfilePath)
+	return savem.FileExist(dockerfilePath)
 }
 
 func saveComposeFile(args []string) bool {

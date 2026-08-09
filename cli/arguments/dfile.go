@@ -17,6 +17,7 @@ func changeCategoryToDockerfile(args []string) bool {
 func getValidArgsForDockerfileCategory() map[ArgumentID]Argument {
 	ls := GetArgLsDockerfile()
 	save := GetArgSaveDockerfile()
+	get := GetArgGetDockerfile()
 	rm := GetArgRmDockerfile()
 	ch := GetArgChangeDockerfile()
 	prune := GetArgPruneDockerfile()
@@ -24,6 +25,7 @@ func getValidArgsForDockerfileCategory() map[ArgumentID]Argument {
 	return map[ArgumentID]Argument{
 		ls.ID:    ls,
 		save.ID:  save,
+		get.ID:   get,
 		rm.ID:    rm,
 		ch.ID:    ch,
 		prune.ID: prune,
