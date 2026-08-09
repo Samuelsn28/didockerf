@@ -21,6 +21,7 @@ func TestArguments(t *testing.T) {
 		{"Changing only tag of dockerfile", []string{"dfile", "ch", "debian-pro:v2", "debian-pro:v3-ultra"}, func() {}, confirmChangeOnlyTagOfDockerfile},
 		{"List all saved dockerfiles", []string{"dfile", "ls"}, func() {}, confirmTheListOfSavedDockerfiles},
 		{"Getting saved dockerfile", []string{"dfile", "get", "debian-pro:v3-ultra", "."}, func() {}, confirmThatSavedDockerfileWasRetrieved},
+		{"Deleting saved dockerfile", []string{"dfile", "rm", "debian-pro:v3-ultra"}, func() {}, confirmDeleteSavedFile},
 	}
 
 	for _, tc := range tests {
@@ -128,6 +129,15 @@ func confirmThatSavedDockerfileWasRetrieved() (bool, string) {
 
 	if retrievedDockerfileInfo.Size() != testDockerfileInfo.Size() {
 		return false, fmt.Sprintf("Retrieved dockerfile is not equal to the original version. \nOriginal version: %d. \nRetrieved dockerfile: %d", testDockerfileInfo.Size(), retrievedDockerfileInfo.Size())
+	}
+
+	return true, ""
+}
+
+func confirmDeleteSavedFile() (bool, string) {
+	_, errFileDontExist := os.Stat("./dockerfile_debian-pro_v3-ultra")
+	if errFileDontExist != nil {
+		return false, "The save wasn't deleted."
 	}
 
 	return true, ""

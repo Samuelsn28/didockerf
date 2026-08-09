@@ -198,6 +198,18 @@ func deleteDirOfOldSaveIfItIsEmpty(oldSaveIdentifier model.Identifier) error {
 }
 
 func removeSavedFile(savedFileIdentifier model.Identifier) error {
+	savedFilePath := getSavePathOfIdentifier(savedFileIdentifier)
+
+	errOnDeleteFile := deleteFile(savedFilePath)
+	if errOnDeleteFile != nil {
+		return errOnDeleteFile
+	}
+
+	errOnDeleteODirOfOldSave := deleteDirOfOldSaveIfItIsEmpty(savedFileIdentifier)
+	if errOnDeleteODirOfOldSave != nil {
+		return errOnDeleteODirOfOldSave
+	}
+
 	return nil
 }
 
