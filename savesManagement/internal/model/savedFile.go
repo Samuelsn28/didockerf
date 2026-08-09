@@ -32,10 +32,9 @@ func TransformFileNameIntoIdentifier(fileName string) (Identifier, error) {
 		return Identifier{}, errors.New("The file name for the saved file is invalid.")
 	}
 	fileNameSplitted := strings.Split(fileName, separetorSavedFile)
-
 	fileType := fy.GetFileTypeOfFilePrefix(fileNameSplitted[0])
 
-	if fileType != nil {
+	if fileType == nil {
 		return Identifier{}, errors.New("The file type passed to identifier is invalid.")
 	}
 
