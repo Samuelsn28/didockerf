@@ -3,7 +3,6 @@ package arguments
 import (
 	"errors"
 	"fmt"
-	"strings"
 
 	"didockerf/out"
 	savem "didockerf/savesManagement"
@@ -37,34 +36,70 @@ func saveDockerfile(args []string) bool {
 	dockerfilePath := args[0]
 	saveIdentifierStr := args[1]
 
-	savem.SaveDockerfile(saveIdentifierStr, dockerfilePath)
+	errOnSave := savem.SaveDockerfile(saveIdentifierStr, dockerfilePath)
+	if errOnArgs != nil {
+		out.FatalError(errOnSave)
+		return true
+	}
+
+	return true
+}
+
+func saveComposeFile(args []string) bool {
+	errOnArgs := checkIfSaveComposeFileArgsAreCorrect(args)
+	if errOnArgs != nil {
+		out.FatalError(errOnArgs)
+		return true
+	}
+
+	composeFilePath := args[0]
+	saveIdentifierStr := args[1]
+
+	errOnSave := savem.SaveComposeFile(saveIdentifierStr, composeFilePath)
+	if errOnSave != nil {
+		out.FatalError(errOnSave)
+		return true
+	}
 
 	return true
 }
 
 func checkIfSaveDockerfileArgsAreCorrect(args []string) error {
-	if len(args) != 2 {
-		return errors.New(fmt.Sprintf("Save requires 2 arguments, but received %d.", len(args)))
+	errOnArgsGeneral := checkIfSaveArgsAreCorrect(args)
+	if errOnArgsGeneral != nil {
+		return errOnArgsGeneral
 	}
 
 	dockerfilePath := args[0]
-	if !existDockerfileToSave(dockerfilePath) {
+	if !existFileToSave(dockerfilePath) {
 		return errors.New("Passed dockerfile doesn't exist.")
 	}
 
 	return nil
 }
 
-func existDockerfileToSave(dockerfilePath string) bool {
-	return savem.FileExist(dockerfilePath)
+func checkIfSaveComposeFileArgsAreCorrect(args []string) error {
+	errOnArgsGeneral := checkIfSaveArgsAreCorrect(args)
+	if errOnArgsGeneral != nil {
+		return errOnArgsGeneral
+	}
+
+	composeFilePath := args[0]
+	if !existFileToSave(composeFilePath) {
+		return errors.New("Passed compose file doesn't exist.")
+	}
+
+	return nil
 }
 
-func saveComposeFile(args []string) bool {
-	fmt.Println("Salvando compose file...")
+func checkIfSaveArgsAreCorrect(args []string) error {
+	if len(args) != 2 {
+		return errors.New(fmt.Sprintf("Save requires 2 arguments, but received %d.", len(args)))
+	}
 
-	return true
+	return nil
 }
 
-func splitSaveIdentifier(saveIdentifier string) []string {
-	return strings.Split(saveIdentifier, ":")
+func existFileToSave(filePath string) bool {
+	return savem.FileExist(filePath)
 }
