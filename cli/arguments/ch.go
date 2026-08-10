@@ -45,15 +45,36 @@ func changeDockerfile(args []string) bool {
 	return true
 }
 
-func checkIfChangeDockerfileArgsAreCorrect(args []string) error {
-	if len(args) != 2 {
-		return errors.New(fmt.Sprintf("Change dockerfile requires 2 arguments, but received %d.", len(args)))
-	}
-	return nil
-}
-
 func changeComposeFile(args []string) bool {
-	fmt.Println("Alterando compose file...")
+	errOnArgs := checkIfChangeComposeFileArgsAreCorrect(args)
+	if errOnArgs != nil {
+		out.FatalError(errOnArgs)
+		return true
+	}
+
+	composeFileIdentifierStr := args[0]
+	newIdentifierStr := args[1]
+
+	errOnChange := savem.ChangeSavedComposeFileIdentifier(composeFileIdentifierStr, newIdentifierStr)
+	if errOnChange != nil {
+		out.FatalError(errOnArgs)
+		return true
+	}
 
 	return true
+}
+
+func checkIfChangeDockerfileArgsAreCorrect(args []string) error {
+	return checkIfChangeArgsAreCorrect(args)
+}
+
+func checkIfChangeComposeFileArgsAreCorrect(args []string) error {
+	return checkIfChangeArgsAreCorrect(args)
+}
+
+func checkIfChangeArgsAreCorrect(args []string) error {
+	if len(args) != 2 {
+		return errors.New(fmt.Sprintf("Change requires 2 arguments, but received %d.", len(args)))
+	}
+	return nil
 }

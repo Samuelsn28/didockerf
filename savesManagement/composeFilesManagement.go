@@ -1,7 +1,7 @@
 package savesManagement
 
 import (
-	"crypto/des"
+	"errors"
 
 	"didockerf/savesManagement/internal/model"
 	fy "didockerf/savesManagement/internal/model/fileType"
@@ -30,4 +30,19 @@ func CopySaveComposeFileTo(identifierStr string, destination string) error {
 	}
 
 	return copySavedFileTo(savedComposeFileIdentifier, destination)
+}
+
+func ChangeSavedComposeFileIdentifier(savedIdentifierStr string, newIdentifierStr string) error {
+	composeFileType := fy.GetComposeFileType()
+	savedIdentifier, errOnGetSavedIdentifier := model.CreateIdentifierFromStr(savedIdentifierStr, composeFileType)
+	newIdentifier, errOnGetNewIdentifier := model.CreateIdentifierFromStr(newIdentifierStr, composeFileType)
+
+	if errOnGetSavedIdentifier != nil {
+		return errors.Join(errors.New("Saved compose file identifier:"), errOnGetSavedIdentifier)
+	}
+	if errOnGetNewIdentifier != nil {
+		return errors.Join(errors.New("New identifier:"), errOnGetNewIdentifier)
+	}
+
+	return changeIdentifierOfSavedFile(savedIdentifier, newIdentifier)
 }
