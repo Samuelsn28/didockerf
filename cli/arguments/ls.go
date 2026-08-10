@@ -1,8 +1,6 @@
 package arguments
 
 import (
-	"fmt"
-
 	"didockerf/out/printers"
 	savem "didockerf/savesManagement"
 )
@@ -33,7 +31,8 @@ func listDockerfiles(args []string) bool {
 }
 
 func listComposeFiles(args []string) bool {
-	fmt.Println("Listando compose files...")
+	savedComposeFilesInfos := savem.GetAllSavedComposeFilesInfos()
+	printers.PrintSavedComposeFilesInfos(savedComposeFilesInfos)
 
 	return true
 }
