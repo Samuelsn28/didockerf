@@ -57,3 +57,7 @@ func RemoveSavedComposeFile(savedIdentifierStr string) error {
 
 	return removeSavedFile(savedIdentifier)
 }
+
+func RemoveAllSavedComposeFiles() error {
+	return removeAllSavedFiles(fy.GetComposeFileType())
+}
