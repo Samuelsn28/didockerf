@@ -15,7 +15,7 @@ const (
 
 func copySavedFileTo(savedFileIdentifier model.Identifier, destinationPath string) error {
 	if !DirExist(destinationPath) {
-		return errors.New("Destination path to get doesn't exist.")
+		return errors.New("Destination path doesn't exist.")
 	}
 	if !alreadyExistSaveWithIdentifier(savedFileIdentifier) {
 		return errors.New("Don't exist saved file with the passed identifier.")

@@ -26,20 +26,14 @@ func makeArgGet(action func([]string) bool) Argument {
 }
 
 func getSavedDockerfile(args []string) bool {
-	errOnArgs := checkIfPassedArgsAreCorrect(args)
+	errOnArgs := checkIfGetDockerfileArgsAreCorrect(args)
 	if errOnArgs != nil {
 		out.FatalError(errOnArgs)
 		return true
 	}
 
 	savedDockerfileIdentifierStr := args[0]
-
-	var copyToPath string
-	if len(args) == 2 && savem.DirExist(args[1]) {
-		copyToPath = args[1]
-	} else {
-		copyToPath = "."
-	}
+	copyToPath := getDestinationPath(args)
 
 	errOnCopyDockerfile := savem.CopySavedDockerfileTo(savedDockerfileIdentifierStr, copyToPath)
 	if errOnCopyDockerfile != nil {
@@ -50,14 +44,44 @@ func getSavedDockerfile(args []string) bool {
 	return true
 }
 
-func checkIfPassedArgsAreCorrect(args []string) error {
+func getSavedComposeFile(args []string) bool {
+	errOnArgs := checkIfGetComposeFileArgsAreCorrect(args)
+	if errOnArgs != nil {
+		out.FatalError(errOnArgs)
+		return true
+	}
+
+	savedComposeFileIdentifierStr := args[0]
+	copyToPath := getDestinationPath(args)
+
+	errOnCopyComposeFile := savem.CopySaveComposeFileTo(savedComposeFileIdentifierStr, copyToPath)
+	if errOnCopyComposeFile != nil {
+		out.FatalError(errOnCopyComposeFile)
+		return true
+	}
+
+	return true
+}
+
+func checkIfGetDockerfileArgsAreCorrect(args []string) error {
+	return checkIfGetArgsAreCorrect(args)
+}
+
+func checkIfGetComposeFileArgsAreCorrect(args []string) error {
+	return checkIfGetArgsAreCorrect(args)
+}
+
+func checkIfGetArgsAreCorrect(args []string) error {
 	if len(args) < 1 || len(args) > 2 {
-		return fmt.Errorf("Get a dockerfile requires 1 or 2 arguments, but received %d", len(args))
+		return fmt.Errorf("Get requires 1 or 2 arguments, but received %d", len(args))
 	}
 
 	return nil
 }
 
-func getSavedComposeFile(args []string) bool {
-	return true
+func getDestinationPath(args []string) string {
+	if len(args) == 1 {
+		return "."
+	}
+	return args[1]
 }
