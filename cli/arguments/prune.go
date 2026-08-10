@@ -1,7 +1,11 @@
 package arguments
 
 import (
+	"errors"
 	"fmt"
+
+	"didockerf/out"
+	savem "didockerf/savesManagement"
 )
 
 const pruneID ArgumentID = "prune"
@@ -23,9 +27,25 @@ func makeArgPrune(action func([]string) bool) Argument {
 }
 
 func pruneDockerfile(args []string) bool {
-	fmt.Println("Deletando todos Dockerfiles...")
+	errOnArgs := checkIfPruneArgsAreCorrect(args)
+	if errOnArgs != nil {
+		out.FatalError(errOnArgs)
+	}
+
+	errOnPrune := savem.RemoveAllSavedDockerfiles()
+	if errOnPrune != nil {
+		out.FatalError(errOnPrune)
+	}
 
 	return true
+}
+
+func checkIfPruneArgsAreCorrect(args []string) error {
+	if len(args) != 0 {
+		return errors.New("Prune command don't need any arguments.")
+	}
+
+	return nil
 }
 
 func pruneComposeFile(args []string) bool {

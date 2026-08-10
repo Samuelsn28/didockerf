@@ -22,14 +22,16 @@ func TestArguments(t *testing.T) {
 		{"List all saved dockerfiles", []string{"dfile", "ls"}, func() {}, confirmTheListOfSavedDockerfiles},
 		{"Getting saved dockerfile", []string{"dfile", "get", "debian-pro:v3-ultra", "."}, func() {}, confirmThatSavedDockerfileWasRetrieved},
 		{"Deleting saved dockerfile", []string{"dfile", "rm", "debian-pro:v3-ultra"}, func() {}, confirmDeleteSavedFile},
+		{"Prune saved dockerfiles", []string{"dfile", "prune"}, beforePruneDockerfiles, confirmPruneDockerfiles},
 	}
 
+	subCommands := pkgArgs.GetSubCommands()
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			tc.beforeActions()
 			remainingArgs = tc.args
 
-			Operate(pkgArgs.GetSubCommands())
+			Operate(subCommands)
 
 			wasResultExpected, errorMessage := tc.confirmExpected()
 			if !wasResultExpected {
@@ -141,6 +143,65 @@ func confirmDeleteSavedFile() (bool, string) {
 	}
 
 	return true, ""
+}
+
+func beforePruneDockerfiles() {
+	subCommands := pkgArgs.GetSubCommands()
+
+	remainingArgs = []string{"dfile", "save", "custom_dockerfiles/debian-plus", "um-debian:v1"}
+	Operate(subCommands)
+
+	remainingArgs = []string{"dfile", "save", "custom_dockerfiles/debian-plus", "um-debian:v5"}
+	Operate(subCommands)
+
+	remainingArgs = []string{"dfile", "save", "custom_dockerfiles/debian-plus", "debian-dois:v10"}
+	Operate(subCommands)
+}
+
+func confirmPruneDockerfiles() (bool, string) {
+	if checkIfExistSavedDockerfile("um-debian", "dockerfile_um-debian_v1") {
+		return false, "This dockerfile was not deleted: saves/dockerfiles/debian-pro/dockerfile_um-debian_v1"
+	}
+
+	if checkIfExistSavedDockerfile("um-debian", "dockerfile_um-debian_v5") {
+		return false, "This dockerfile was not deleted: saves/dockerfiles/debian-pro/dockerfile_um-debian_v5"
+	}
+
+	if checkIfExistSavedDockerfile("debian-dois", "dockerfile_debian-dois_v10") {
+		return false, "This dockerfile was not deleted: saves/dockerfiles/debian-pro/dockerfile_debian-dois_v10"
+	}
+
+	if checkIfDockerfileDirExist("um-debian") {
+		return false, "Dir of dockerfile wasn't deleted: saves/dockerfiles/um-debian."
+	}
+
+	if checkIfDockerfileDirExist("debian-dois") {
+		return false, "Dir of dockerfile wasn't deleted: saves/dockerfiles/debian-dois."
+	}
+
+	return true, ""
+}
+
+func checkIfExistSavedDockerfile(dirName string, fileName string) bool {
+	filePath := "saves/dockerfiles/" + dirName + "/" + fileName
+
+	_, err := os.Stat(filePath)
+
+	if os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
+func checkIfDockerfileDirExist(dirName string) bool {
+	dirPath := "saves/dockerfiles/" + dirName
+
+	_, err := os.Stat(dirPath)
+
+	if os.IsNotExist(err) {
+		return false
+	}
+	return true
 }
 
 func cleanAll() {

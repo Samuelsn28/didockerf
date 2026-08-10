@@ -51,3 +51,7 @@ func deleteDir(dirPath string) error {
 	}
 	return nil
 }
+
+func deleteDirWithAllContent(dirPath string) error {
+	return os.RemoveAll(dirPath)
+}

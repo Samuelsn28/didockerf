@@ -56,3 +56,7 @@ func RemoveSavedDockerfile(savedDockerfileIdentifierStr string) error {
 
 	return removeSavedFile(savedDockerfileIdentifier)
 }
+
+func RemoveAllSavedDockerfiles() error {
+	return removeAllSavedFiles(fy.GetDockerfileType())
+}

@@ -213,6 +213,18 @@ func removeSavedFile(savedFileIdentifier model.Identifier) error {
 	return nil
 }
 
-func removeAllSavedFiles() error {
+func removeAllSavedFiles(fileType fy.FileType) error {
+	pathOfTheFileType := getPathOfFileType(fileType)
+
+	errOnDeleteDir := deleteDirWithAllContent(pathOfTheFileType)
+	if errOnDeleteDir != nil {
+		return errOnDeleteDir
+	}
+
+	errOnRecreateDir := createDir(pathOfTheFileType)
+	if errOnRecreateDir != nil {
+		return errOnRecreateDir
+	}
+
 	return nil
 }
