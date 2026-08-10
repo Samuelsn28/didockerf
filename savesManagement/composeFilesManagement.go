@@ -46,3 +46,14 @@ func ChangeSavedComposeFileIdentifier(savedIdentifierStr string, newIdentifierSt
 
 	return changeIdentifierOfSavedFile(savedIdentifier, newIdentifier)
 }
+
+func RemoveSavedComposeFile(savedIdentifierStr string) error {
+	composeFileType := fy.GetComposeFileType()
+	savedIdentifier, errOnGetIdentifier := model.CreateIdentifierFromStr(savedIdentifierStr, composeFileType)
+
+	if errOnGetIdentifier != nil {
+		return errOnGetIdentifier
+	}
+
+	return removeSavedFile(savedIdentifier)
+}

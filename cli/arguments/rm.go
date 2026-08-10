@@ -2,7 +2,6 @@ package arguments
 
 import (
 	"errors"
-	"fmt"
 
 	"didockerf/out"
 	savem "didockerf/savesManagement"
@@ -27,7 +26,7 @@ func makeArgRm(action func([]string) bool) Argument {
 }
 
 func removeDockerfile(args []string) bool {
-	errOnArgs := checkIfArgsAreCorrect(args)
+	errOnArgs := checkIfRemoveDockerfileArgsAreCorrect(args)
 	if errOnArgs != nil {
 		out.FatalError(errOnArgs)
 		return true
@@ -44,16 +43,36 @@ func removeDockerfile(args []string) bool {
 	return true
 }
 
-func checkIfArgsAreCorrect(args []string) error {
+func removeComposeFile(args []string) bool {
+	errOnArgs := checkIfRemoveComposeFileArgsAreCorrect(args)
+	if errOnArgs != nil {
+		out.FatalError(errOnArgs)
+		return true
+	}
+
+	savedComposeFileIdentifierStr := args[0]
+
+	errOnRemove := savem.RemoveSavedComposeFile(savedComposeFileIdentifierStr)
+	if errOnRemove != nil {
+		out.FatalError(errOnRemove)
+		return true
+	}
+
+	return true
+}
+
+func checkIfRemoveDockerfileArgsAreCorrect(args []string) error {
+	return checkIfRemoveArgsAreCorrect(args)
+}
+
+func checkIfRemoveComposeFileArgsAreCorrect(args []string) error {
+	return checkIfRemoveArgsAreCorrect(args)
+}
+
+func checkIfRemoveArgsAreCorrect(args []string) error {
 	if len(args) != 1 {
-		return errors.New(fmt.Sprintf("Remove dockerfile requires 1 argument, but received %d.", len(args)))
+		return errors.New(fmt.Sprintf("Remove requires 1 argument, but received %d.", len(args)))
 	}
 
 	return nil
-}
-
-func removeComposeFile(args []string) bool {
-	fmt.Println("Removendo compose file...")
-
-	return true
 }
