@@ -11,7 +11,7 @@ var remainingArgs []string = os.Args[1:]
 
 func Operate(validArgs map[argPkg.ArgumentID]argPkg.Argument) {
 	if len(remainingArgs) == 0 {
-		remainingArgs = append(remainingArgs, "--help")
+		remainingArgs = append(remainingArgs, "help")
 	}
 
 	currentPassedArg := remainingArgs[0]
