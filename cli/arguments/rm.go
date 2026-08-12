@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"didockerf/out"
+	"didockerf/out/printers"
 	savem "didockerf/savesManagement"
 )
 
@@ -27,6 +28,11 @@ func makeArgRm(action func([]string) bool) Argument {
 }
 
 func removeDockerfile(args []string) bool {
+	if len(args) == 0 {
+		showRemoveDockerfileHelpMsg()
+		return true
+	}
+
 	errOnArgs := checkIfRemoveDockerfileArgsAreCorrect(args)
 	if errOnArgs != nil {
 		out.FatalError(errOnArgs)
@@ -45,6 +51,11 @@ func removeDockerfile(args []string) bool {
 }
 
 func removeComposeFile(args []string) bool {
+	if len(args) == 0 {
+		showRemoveComposeFileHelpMsg()
+		return true
+	}
+
 	errOnArgs := checkIfRemoveComposeFileArgsAreCorrect(args)
 	if errOnArgs != nil {
 		out.FatalError(errOnArgs)
@@ -76,4 +87,22 @@ func checkIfRemoveArgsAreCorrect(args []string) error {
 	}
 
 	return nil
+}
+
+func showRemoveDockerfileHelpMsg() {
+	helpMsg := `
+Usage:	didockerf dfile rm <name>:<tag>
+
+	`
+
+	printers.PrintHelpMessage(helpMsg)
+}
+
+func showRemoveComposeFileHelpMsg() {
+	helpMsg := `
+Usage:	didockerf composefile rm <name>:<tag>
+
+	`
+
+	printers.PrintHelpMessage(helpMsg)
 }

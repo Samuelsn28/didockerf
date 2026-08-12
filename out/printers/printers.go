@@ -33,3 +33,7 @@ func printNameAndTagOfSavedFiles(savesType string, savedFilesInfos []savem.Saved
 	}
 	writer.Flush()
 }
+
+func PrintHelpMessage(helpMsg string) {
+	fmt.Println(helpMsg)
+}

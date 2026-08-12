@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"didockerf/out"
+	"didockerf/out/printers"
 	savem "didockerf/savesManagement"
 )
 
@@ -26,6 +27,11 @@ func makeArgGet(action func([]string) bool) Argument {
 }
 
 func getSavedDockerfile(args []string) bool {
+	if len(args) == 0 {
+		showGetDockerfileHelpMsg()
+		return true
+	}
+
 	errOnArgs := checkIfGetDockerfileArgsAreCorrect(args)
 	if errOnArgs != nil {
 		out.FatalError(errOnArgs)
@@ -45,6 +51,11 @@ func getSavedDockerfile(args []string) bool {
 }
 
 func getSavedComposeFile(args []string) bool {
+	if len(args) == 0 {
+		showGetComposeFileHelpMsg()
+		return true
+	}
+
 	errOnArgs := checkIfGetComposeFileArgsAreCorrect(args)
 	if errOnArgs != nil {
 		out.FatalError(errOnArgs)
@@ -84,4 +95,22 @@ func getDestinationPath(args []string) string {
 		return "."
 	}
 	return args[1]
+}
+
+func showGetDockerfileHelpMsg() {
+	helpMsg := `
+Usage:	didockerf dfile get <name>:<tag> [destination path]
+
+	`
+
+	printers.PrintHelpMessage(helpMsg)
+}
+
+func showGetComposeFileHelpMsg() {
+	helpMsg := `
+Usage:	didockerf composefile get <name>:<tag> [destination path]
+
+	`
+
+	printers.PrintHelpMessage(helpMsg)
 }

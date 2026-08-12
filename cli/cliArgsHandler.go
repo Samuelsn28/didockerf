@@ -11,14 +11,13 @@ var remainingArgs []string = os.Args[1:]
 
 func Operate(validArgs map[argPkg.ArgumentID]argPkg.Argument) {
 	if len(remainingArgs) == 0 {
-		out.PrintFatalError("Argumentos vazio. Encerrando...")
-		return
+		remainingArgs = append(remainingArgs, "--help")
 	}
 
 	currentPassedArg := remainingArgs[0]
 	arg, isArgValid := validArgs[argPkg.ArgumentID(currentPassedArg)]
 	if !isArgValid {
-		out.PrintFatalError("Invalid argument")
+		out.PrintFatalError("Invalid argument.")
 		return
 	}
 

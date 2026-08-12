@@ -2,6 +2,8 @@ package savesManagement
 
 import (
 	"errors"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"didockerf/out"
@@ -10,8 +12,47 @@ import (
 )
 
 const (
-	SavesDir = "saves"
+	savesDirName = "saves"
 )
+
+var (
+	savesDir          string
+	isSaveDirResolved = false
+)
+
+func getSavesDir() string {
+	if isSaveDirResolved {
+		return savesDir
+	}
+
+	execPath, errOnGetExecutablePath := os.Executable()
+	if errOnGetExecutablePath != nil {
+		out.FatalError(errOnGetExecutablePath)
+	}
+
+	realExecPath, errOnResolveSymlink := filepath.EvalSymlinks(execPath)
+	if errOnResolveSymlink != nil {
+		out.FatalError(errOnResolveSymlink)
+	}
+
+	dirOfTheExec := filepath.Dir(realExecPath)
+
+	if strings.Contains(dirOfTheExec, "go-build") || strings.HasPrefix(filepath.Base(realExecPath), "main.test") {
+		wd, err := os.Getwd()
+
+		if err == nil {
+			savesDir = wd + "/" + savesDirName
+			isSaveDirResolved = true
+
+			return wd
+		}
+	}
+
+	savesDir = dirOfTheExec + "/" + savesDirName
+	isSaveDirResolved = true
+
+	return savesDir
+}
 
 func copySavedFileTo(savedFileIdentifier model.Identifier, destinationPath string) error {
 	if !DirExist(destinationPath) {
@@ -53,7 +94,7 @@ func getAllSavedFilesOf(fileType fy.FileType) []SavedFileInfo {
 }
 
 func getPathOfFileType(fileType fy.FileType) string {
-	return SavesDir + "/" + fileType.GetSaveLocation()
+	return getSavesDir() + "/" + fileType.GetSaveLocation()
 }
 
 func createSaveDirOfFileType(fileType fy.FileType) error {

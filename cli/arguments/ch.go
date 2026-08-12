@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"didockerf/out"
+	"didockerf/out/printers"
 	savem "didockerf/savesManagement"
 )
 
@@ -27,6 +28,11 @@ func makeArgChange(action func([]string) bool) Argument {
 }
 
 func changeDockerfile(args []string) bool {
+	if len(args) == 0 {
+		showChangeDockerfileHelpMsg()
+		return true
+	}
+
 	errOnArgs := checkIfChangeDockerfileArgsAreCorrect(args)
 	if errOnArgs != nil {
 		out.FatalError(errOnArgs)
@@ -46,6 +52,11 @@ func changeDockerfile(args []string) bool {
 }
 
 func changeComposeFile(args []string) bool {
+	if len(args) == 0 {
+		showChangeComposeFileHelpMsg()
+		return true
+	}
+
 	errOnArgs := checkIfChangeComposeFileArgsAreCorrect(args)
 	if errOnArgs != nil {
 		out.FatalError(errOnArgs)
@@ -77,4 +88,22 @@ func checkIfChangeArgsAreCorrect(args []string) error {
 		return errors.New(fmt.Sprintf("Change requires 2 arguments, but received %d.", len(args)))
 	}
 	return nil
+}
+
+func showChangeDockerfileHelpMsg() {
+	helpMsg := `
+Usage:	didockerf dfile ch <old name>:<old tag> <new name>:<new tag>
+
+	`
+
+	printers.PrintHelpMessage(helpMsg)
+}
+
+func showChangeComposeFileHelpMsg() {
+	helpMsg := `
+Usage:	didockerf composefile ch <old name>:<old tag> <new name>:<new tag>
+
+	`
+
+	printers.PrintHelpMessage(helpMsg)
 }

@@ -1,5 +1,7 @@
 package arguments
 
+import "didockerf/out/printers"
+
 const dockerfileCategoryID ArgumentID = "dfile"
 
 func GetSubCommandDfile() Argument {
@@ -11,6 +13,11 @@ func GetSubCommandDfile() Argument {
 }
 
 func changeCategoryToDockerfile(args []string) bool {
+	if len(args) == 0 {
+		showDfileHelpMsg()
+		return true
+	}
+
 	return false
 }
 
@@ -30,4 +37,21 @@ func getValidArgsForDockerfileCategory() map[ArgumentID]Argument {
 		ch.ID:    ch,
 		prune.ID: prune,
 	}
+}
+
+func showDfileHelpMsg() {
+	helpMsg := `
+Usage:	didockerf dfile <command>
+
+Commands:
+  save		Save a new dockerfile
+  ls		List all saved dockerfiles
+  get		Retrieve a saved dockerfile
+  ch		Change identifier of a saved dockerfile
+  rm		Remove a saved dockerfile
+  prune		Remove all saved dockerfiles
+
+	`
+
+	printers.PrintHelpMessage(helpMsg)
 }
